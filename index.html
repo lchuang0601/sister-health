@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>健康互助管理日記 🌸</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Noto Sans TC', sans-serif; background-color: #FAF8F5; }
+    .transition-all { transition: all 0.2s ease-in-out; }
+  </style>
+</head>
+<body class="text-stone-800 min-h-screen pb-20">
+
+  <!-- 頂部導覽列 -->
+  <header class="bg-white/95 backdrop-blur sticky top-0 z-40 border-b border-stone-200 shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌱</span>
+        <div>
+          <h1 class="text-base font-bold text-stone-700 leading-tight">健康互助管理</h1>
+          <p class="text-[11px] text-stone-400">目前使用者：<span id="header-user-name" class="font-bold text-amber-800">👧 莉君</span></p>
+        </div>
+      </div>
+      <!-- 成員選擇按鈕群 -->
+      <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+        <div id="members-bar" class="flex items-center gap-1 bg-stone-100 p-1 rounded-full border border-stone-200">
+          <!-- 成員標籤由 JS 動態生成 -->
+        </div>
+        <button onclick="addNewMember()" title="新增成員" class="p-1.5 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full text-xs font-bold border border-stone-200">
+          ➕
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 mt-4 space-y-5">
+
+    <!-- 1. 個人減重檔案與重要記事備忘（起始資料/內臟脂肪） -->
+    <section class="bg-white rounded-3xl p-5 shadow-sm border border-stone-200">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📋</span>
+          <h2 class="text-sm font-bold text-stone-700"><span id="profile-user-name">👧 莉君</span> 的減重小檔案與記事</h2>
+        </div>
+        <button onclick="saveUserProfile()" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-medium px-3 py-1 rounded-xl transition">
+          💾 儲存檔案
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+        <div>
+          <label class="block text-[11px] text-stone-400 mb-1">🏁 起始體重 (kg)</label>
+          <input type="number" step="0.1" id="profile-start-weight" placeholder="例如: 55.0" class="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs">
+        </div>
+        <div>
+          <label class="block text-[11px] text-stone-400 mb-1">🎯 目標體重 (kg)</label>
+          <input type="number" step="0.1" id="profile-target-weight" placeholder="例如: 49.0" class="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs">
+        </div>
+        <div>
+          <label class="block text-[11px] text-stone-400 mb-1">🩺 內臟脂肪等級</label>
+          <input type="number" step="0.5" id="profile-visceral-fat" placeholder="例如: 4.0" class="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs">
+        </div>
+        <div>
+          <label class="block text-[11px] text-stone-400 mb-1">✏️ 修改我的暱稱</label>
+          <input type="text" id="profile-display-name" placeholder="輸入新暱稱" class="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-[11px] text-stone-400 mb-1">📌 個人備忘 / 重要小記事 / 減重原則</label>
+        <textarea id="profile-notes" rows="2" placeholder="例如：少喝含糖飲料、每天晚上 11 點前睡覺、目標今年夏天穿合身洋裝..." class="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-xs leading-relaxed"></textarea>
+      </div>
+    </section>
+
+    <!-- 2. 今日喝水打卡 -->
+    <section class="bg-white rounded-3xl p-5 shadow-sm border border-stone-200">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💧</span>
+          <h2 class="text-sm font-bold text-stone-700">今日喝水進度 (<span id="water-user-name">👧 莉君</span>)</h2>
+        </div>
+        <span id="water-display" class="text-xs font-bold text-sky-600 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">0 / 2000 ml</span>
+      </div>
+      <div class="w-full bg-stone-100 rounded-full h-3 overflow-hidden mb-3">
+        <div id="water-progress-bar" class="bg-sky-400 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <button onclick="addWater(250)" class="bg-sky-50 text-sky-700 hover:bg-sky-100 active:scale-95 font-medium px-3 py-1.5 rounded-xl border border-sky-200 transition-all">+250 ml (一杯水)</button>
+        <button onclick="addWater(500)" class="bg-sky-50 text-sky-700 hover:bg-sky-100 active:scale-95 font-medium px-3 py-1.5 rounded-xl border border-sky-200 transition-all">+500 ml (隨手瓶)</button>
+        <button onclick="resetWater()" class="text-stone-400 hover:text-stone-600 ml-auto py-1 text-[11px]">重設歸零</button>
+      </div>
+    </section>
+
+    <!-- 3. 今日打卡填寫表單 -->
+    <section class="bg-white rounded-3xl p-5 shadow-sm border border-stone-200">
+      <h2 class="text-sm font-bold text-stone-700 mb-3 flex items-center gap-1.5">
+        <span>📝</span> 今日打卡填寫 (<span id="form-user-name" class="text-amber-800">👧 莉君</span>)
+      </h2>
+
+      <form id="checkin-form" onsubmit="handleFormSubmit(event)" class="space-y-3.5">
+        <!-- 日期、體重、體脂肪率 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-stone-500 mb-1">📅 打卡日期</label>
+            <input type="date" id="input-date" required class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs focus:ring-2 focus:ring-amber-200 border">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-stone-500 mb-1">⚖️ 今日體重 (kg)</label>
+            <input type="number" step="0.1" id="input-weight" required placeholder="例如: 52.4" class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs focus:ring-2 focus:ring-amber-200 border">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-stone-500 mb-1">📊 體脂肪率 (%) <span class="text-stone-400 font-normal">選填</span></label>
+            <input type="number" step="0.1" id="input-bodyfat" placeholder="例如: 26.5" class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs focus:ring-2 focus:ring-amber-200 border">
+          </div>
+        </div>
+
+        <!-- 飲食記錄 -->
+        <div class="bg-stone-50/70 rounded-2xl p-3.5 border border-stone-200/70 space-y-2.5">
+          <span class="text-xs font-bold text-stone-600 block">🥗 今日飲食內容</span>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input type="text" id="input-breakfast" placeholder="☀️ 早餐" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
+            <input type="text" id="input-lunch" placeholder="🍱 午餐" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
+            <input type="text" id="input-dinner" placeholder="🌙 晚餐" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
+          </div>
+          <input type="text" id="input-snacks" placeholder="🍎 水果 / 點心 / 飲料" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
+        </div>
+
+        <!-- 運動 & 想說的話 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-stone-500 mb-1">🏃‍♀️ 今日運動</label>
+            <input type="text" id="input-exercise" placeholder="例如：超慢跑 30 分鐘（選填）" class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs border">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-stone-500 mb-1">💌 想對彼此說的話 / 心情</label>
+            <input type="text" id="input-note" placeholder="自由留言，沒有可留空" class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs border">
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="w-full bg-stone-800 hover:bg-stone-900 active:scale-[0.99] text-white font-medium py-3 rounded-2xl text-xs transition-all shadow-md">
+          儲存並同步至雲端 ☁️
+        </button>
+      </form>
+    </section>
+
+    <!-- 4. 多功能趨勢折線圖（三種模式切換） -->
+    <section class="bg-white rounded-3xl p-5 shadow-sm border border-stone-200">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <h2 class="text-sm font-bold text-stone-700 flex items-center gap-1.5">
+          <span>📈</span> 數據趨勢追蹤
+        </h2>
+        <!-- 圖表模式切換按鈕 -->
+        <div class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl text-xs">
+          <button id="chart-tab-diff" onclick="switchChartMode('diff')" class="px-2.5 py-1 rounded-lg font-medium bg-white text-stone-800 shadow-sm transition">
+            相對增減 (±kg)
+          </button>
+          <button id="chart-tab-raw" onclick="switchChartMode('raw')" class="px-2.5 py-1 rounded-lg font-medium text-stone-500 hover:text-stone-800 transition">
+            原始體重 (kg)
+          </button>
+          <button id="chart-tab-fat" onclick="switchChartMode('fat')" class="px-2.5 py-1 rounded-lg font-medium text-stone-500 hover:text-stone-800 transition">
+            體脂肪率 (%)
+          </button>
+        </div>
+      </div>
+      <p id="chart-sub-desc" class="text-[11px] text-stone-400 mb-3">以各自第 1 天為 0.0 kg 基準，向下代表減重進步</p>
+      <div class="w-full h-60">
+        <canvas id="healthChart"></canvas>
+      </div>
+    </section>
+
+    <!-- 5. 共享歷史打卡日記 -->
+    <section class="space-y-3">
+      <h2 class="text-sm font-bold text-stone-700 flex items-center gap-1.5">
+        <span>💬</span> 歷史打卡日記
+      </h2>
+      <div id="feed-container" class="space-y-3">
+        <p class="text-xs text-stone-400 text-center py-6">正在連接雲端中...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Firebase 邏輯 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkjOEeSxxg4u3kMxZTkCpR_Dpj64Vq-I0",
+      authDomain: "sister-health-diary.firebaseapp.com",
+      projectId: "sister-health-diary",
+      storageBucket: "sister-health-diary.firebasestorage.app",
+      messagingSenderId: "775143495517",
+      appId: "1:775143495517:web:523983c972e68ca86c7ab4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 成員清單管理（儲存在 LocalStorage，可彈性擴充）
+    let members = JSON.parse(localStorage.getItem('health_members_list')) || [
+      { id: 'member_lijun', name: '👧 莉君' },
+      { id: 'member_azhi', name: '🌸 阿智' }
+    ];
+
+    let currentUserId = localStorage.getItem('health_saved_user') || 'member_lijun';
+    let currentUserName = members.find(m => m.id === currentUserId)?.name || members[0].name;
+    let currentWater = 0;
+    let chartInstance = null;
+    let chartMode = 'diff'; // 'diff' | 'raw' | 'fat'
+    let allLogs = [];
+    let userProfiles = {};
+
+    document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+
+    // 渲染成員列按鈕
+    function renderMembersBar() {
+      const container = document.getElementById('members-bar');
+      container.innerHTML = '';
+      members.forEach(m => {
+        const btn = document.createElement('button');
+        const isActive = m.id === currentUserId;
+        btn.className = `px-3.5 py-1 text-xs rounded-full font-medium transition-all ${
+          isActive ? 'bg-amber-200 text-amber-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+        }`;
+        btn.textContent = m.name;
+        btn.onclick = () => switchUser(m.id, m.name);
+        container.appendChild(btn);
+      });
+      document.getElementById('header-user-name').textContent = currentUserName;
+      document.getElementById('water-user-name').textContent = currentUserName;
+      document.getElementById('form-user-name').textContent = currentUserName;
+      document.getElementById('profile-user-name').textContent = currentUserName;
+      loadProfileToForm();
+    }
+
+    // 切換當前使用者
+    window.switchUser = function(userId, userName) {
+      currentUserId = userId;
+      currentUserName = userName;
+      localStorage.setItem('health_saved_user', userId);
+      renderMembersBar();
+      updateChart();
+    };
+
+    // 彈性新增成員
+    window.addNewMember = function() {
+      const name = prompt("請輸入新成員的稱呼（例如：🌸 二姊 或 小美）：");
+      if (name && name.trim()) {
+        const newId = 'member_' + Date.now();
+        members.push({ id: newId, name: name.trim() });
+        localStorage.setItem('health_members_list', JSON.stringify(members));
+        switchUser(newId, name.trim());
+      }
+    };
+
+    // 儲存個人檔案（起始體重/內臟脂肪/備忘）
+    window.saveUserProfile = async function() {
+      const startW = parseFloat(document.getElementById('profile-start-weight').value) || null;
+      const targetW = parseFloat(document.getElementById('profile-target-weight').value) || null;
+      const visceral = parseFloat(document.getElementById('profile-visceral-fat').value) || null;
+      const newName = document.getElementById('profile-display-name').value.trim();
+      const notes = document.getElementById('profile-notes').value.trim();
+
+      if (newName && newName !== currentUserName) {
+        currentUserName = newName;
+        const targetMember = members.find(m => m.id === currentUserId);
+        if (targetMember) targetMember.name = newName;
+        localStorage.setItem('health_members_list', JSON.stringify(members));
+      }
+
+      const profileData = {
+        userId: currentUserId,
+        userName: currentUserName,
+        startWeight: startW,
+        targetWeight: targetW,
+        visceralFat: visceral,
+        notes: notes,
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        await setDoc(doc(db, "user_profiles", currentUserId), profileData);
+        alert('個人減重小檔案已成功儲存！🌸');
+        renderMembersBar();
+      } catch (err) {
+        alert('儲存失敗：' + err.message);
+      }
+    };
+
+    // 載入當前使用者的個人檔案至表單
+    function loadProfileToForm() {
+      const prof = userProfiles[currentUserId] || {};
+      document.getElementById('profile-start-weight').value = prof.startWeight || '';
+      document.getElementById('profile-target-weight').value = prof.targetWeight || '';
+      document.getElementById('profile-visceral-fat').value = prof.visceralFat || '';
+      document.getElementById('profile-display-name').value = currentUserName;
+      document.getElementById('profile-notes').value = prof.notes || '';
+    }
+
+    // 喝水按鈕
+    window.addWater = function(amt) {
+      currentWater += amt;
+      updateWaterDisplay();
+    };
+    window.resetWater = function() {
+      currentWater = 0;
+      updateWaterDisplay();
+    };
+    function updateWaterDisplay() {
+      const pct = Math.min(100, Math.round((currentWater / 2000) * 100));
+      document.getElementById('water-display').textContent = `${currentWater} / 2000 ml (${pct}%)`;
+      document.getElementById('water-progress-bar').style.width = `${pct}%`;
+    }
+
+    // 表單打卡送出
+    window.handleFormSubmit = async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = '寫入雲端中...';
+
+      const bodyFatVal = document.getElementById('input-bodyfat').value;
+
+      const entry = {
+        userId: currentUserId,
+        userName: currentUserName,
+        date: document.getElementById('input-date').value,
+        weight: parseFloat(document.getElementById('input-weight').value),
+        bodyFat: bodyFatVal ? parseFloat(bodyFatVal) : null,
+        water: currentWater,
+        breakfast: document.getElementById('input-breakfast').value.trim(),
+        lunch: document.getElementById('input-lunch').value.trim(),
+        dinner: document.getElementById('input-dinner').value.trim(),
+        snacks: document.getElementById('input-snacks').value.trim(),
+        exercise: document.getElementById('input-exercise').value.trim(),
+        note: document.getElementById('input-note').value.trim(),
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        await addDoc(collection(db, "daily_logs"), entry);
+        alert('打卡成功！已同步至雲端 🌸');
+        e.target.reset();
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        currentWater = 0;
+        updateWaterDisplay();
+      } catch (err) {
+        alert('儲存失敗：' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '儲存並同步至雲端 ☁️';
+      }
+    };
+
+    // 圖表模式切換
+    window.switchChartMode = function(mode) {
+      chartMode = mode;
+      const bDiff = document.getElementById('chart-tab-diff');
+      const bRaw = document.getElementById('chart-tab-raw');
+      const bFat = document.getElementById('chart-tab-fat');
+      const subDesc = document.getElementById('chart-sub-desc');
+
+      [bDiff, bRaw, bFat].forEach(b => {
+        b.className = "px-2.5 py-1 rounded-lg font-medium text-stone-500 hover:text-stone-800 transition";
+      });
+
+      if (mode === 'diff') {
+        bDiff.className = "px-2.5 py-1 rounded-lg font-medium bg-white text-stone-800 shadow-sm transition";
+        subDesc.textContent = "以各自第 1 天為 0.0 kg 基準，向下代表減重進步";
+      } else if (mode === 'raw') {
+        bRaw.className = "px-2.5 py-1 rounded-lg font-medium bg-white text-stone-800 shadow-sm transition";
+        subDesc.textContent = "顯示各成員每日記錄的實際體重數值 (kg)";
+      } else {
+        bFat.className = "px-2.5 py-1 rounded-lg font-medium bg-white text-stone-800 shadow-sm transition";
+        subDesc.textContent = "顯示各成員體脂肪率變化趨勢 (%)，增肌減脂看這裡";
+      }
+      updateChart();
+    };
+
+    // 監聽個人檔案集合
+    onSnapshot(collection(db, "user_profiles"), (snapshot) => {
+      userProfiles = {};
+      snapshot.forEach(d => {
+        userProfiles[d.id] = d.data();
+      });
+      loadProfileToForm();
+    });
+
+    // 監聽打卡紀錄集合
+    const q = query(collection(db, "daily_logs"), orderBy("date", "desc"));
+    onSnapshot(q, (snapshot) => {
+      allLogs = [];
+      snapshot.forEach(d => {
+        allLogs.push({ id: d.id, ...d.data() });
+      });
+      renderFeed();
+      updateChart();
+    });
+
+    // 渲染動態牆
+    function renderFeed() {
+      const feed = document.getElementById('feed-container');
+      feed.innerHTML = '';
+
+      if (allLogs.length === 0) {
+        feed.innerHTML = '<p class="text-xs text-stone-400 text-center py-6">目前還沒有紀錄，開始記錄今天吧！</p>';
+        return;
+      }
+
+      // 取得基準體重
+      const sortedAsc = allLogs.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+      const baseWeights = {};
+      sortedAsc.forEach(l => {
+        if (baseWeights[l.userId] === undefined) {
+          baseWeights[l.userId] = l.weight;
+        }
+      });
+
+      allLogs.forEach(item => {
+        let diffBadge = '';
+        if (baseWeights[item.userId] !== undefined) {
+          const diff = (item.weight - baseWeights[item.userId]).toFixed(1);
+          if (diff < 0) {
+            diffBadge = `<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-xs font-semibold">📉 ${diff} kg</span>`;
+          } else if (diff > 0) {
+            diffBadge = `<span class="text-rose-600 bg-rose-50 px-2 py-0.5 rounded text-xs font-semibold">📈 +${diff} kg</span>`;
+          } else {
+            diffBadge = `<span class="text-stone-500 bg-stone-100 px-2 py-0.5 rounded text-xs font-semibold">⚖️ 起始</span>`;
+          }
+        }
+
+        const fatBadge = item.bodyFat ? `<span class="text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-xs font-medium">體脂 ${item.bodyFat}%</span>` : '';
+
+        const mealsList = [];
+        if (item.breakfast) mealsList.push(`<span>☀️ 早餐：${item.breakfast}</span>`);
+        if (item.lunch) mealsList.push(`<span>🍱 午餐：${item.lunch}</span>`);
+        if (item.dinner) mealsList.push(`<span>🌙 晚餐：${item.dinner}</span>`);
+        if (item.snacks) mealsList.push(`<span>🍎 點心/水果：${item.snacks}</span>`);
+
+        const mealsHtml = mealsList.length > 0 
+          ? `<div class="text-xs bg-stone-50 p-2.5 rounded-xl space-y-1 text-stone-700">${mealsList.join('<br>')}</div>` 
+          : '';
+
+        const exerciseHtml = item.exercise 
+          ? `<div class="text-xs text-stone-600">🏃‍♀️ ${item.exercise}</div>` 
+          : '';
+
+        const noteHtml = item.note 
+          ? `<div class="text-xs bg-amber-50/80 text-amber-900 border border-amber-100 px-2.5 py-1.5 rounded-xl leading-relaxed">💌 ${item.note}</div>` 
+          : '';
+
+        const waterText = item.water > 0 ? ` · 💧 ${item.water}ml` : '';
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl p-4 shadow-sm border border-stone-200 space-y-2.5";
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700">
+                ${item.userName}
+              </span>
+              <span class="text-xs text-stone-400">${item.date}${waterText}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              ${diffBadge}
+              ${fatBadge}
+              <span class="text-xs font-bold text-stone-700 bg-stone-100 px-2 py-0.5 rounded-md">${item.weight} kg</span>
+            </div>
+          </div>
+
+          ${mealsHtml}
+          ${exerciseHtml}
+          ${noteHtml}
+        `;
+        feed.appendChild(card);
+      });
+    }
+
+    // 繪製圖表（支援 三種模式）
+    const colors = ['#d97706', '#e11d48', '#0284c7', '#16a34a', '#9333ea'];
+
+    function updateChart() {
+      const allDates = Array.from(new Set(allLogs.map(l => l.date))).sort();
+      const uniqueUsers = Array.from(new Set(allLogs.map(l => l.userId)));
+
+      const datasets = uniqueUsers.map((uid, index) => {
+        const uLogs = allLogs.filter(l => l.userId === uid).sort((a, b) => new Date(a.date) - new Date(b.date));
+        const uName = uLogs[0]?.userName || uid;
+        const color = colors[index % colors.length];
+
+        const baseW = uLogs[0]?.weight;
+        const dateMap = {};
+
+        uLogs.forEach(l => {
+          if (chartMode === 'diff') {
+            dateMap[l.date] = parseFloat((l.weight - baseW).toFixed(2));
+          } else if (chartMode === 'raw') {
+            dateMap[l.date] = l.weight;
+          } else if (chartMode === 'fat') {
+            dateMap[l.date] = l.bodyFat !== null ? l.bodyFat : null;
+          }
+        });
+
+        const data = allDates.map(d => dateMap[d] !== undefined ? dateMap[d] : null);
+
+        let labelSuffix = ' (相對增減)';
+        if (chartMode === 'raw') labelSuffix = ' (實際體重)';
+        if (chartMode === 'fat') labelSuffix = ' (體脂肪率)';
+
+        return {
+          label: `${uName}${labelSuffix}`,
+          data: data,
+          borderColor: color,
+          backgroundColor: color + '15',
+          tension: 0.3,
+          fill: false,
+          spanGaps: true
+        };
+      });
+
+      const ctx = document.getElementById('healthChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: allDates,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const val = context.parsed.y;
+                  if (val === null || val === undefined) return '';
+                  let unit = ' kg';
+                  let sign = '';
+                  if (chartMode === 'diff') {
+                    unit = ' kg';
+                    sign = val > 0 ? '+' : '';
+                  } else if (chartMode === 'fat') {
+                    unit = ' %';
+                  }
+                  return `${context.dataset.label}: ${sign}${val}${unit}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              ticks: {
+                callback: function(v) {
+                  if (chartMode === 'diff') return (v > 0 ? '+' : '') + v + ' kg';
+                  if (chartMode === 'raw') return v + ' kg';
+                  if (chartMode === 'fat') return v + ' %';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 初始化啟動
+    renderMembersBar();
+  </script>
+</body>
+</html>
