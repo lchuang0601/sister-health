@@ -115,20 +115,122 @@
       </div>
     </section>
 
-    <!-- 3. 今日打卡填寫表單（輸入自動即時同步） -->
-    <section class="bg-white rounded-3xl p-5 shadow-sm border border-stone-200">
+    <!-- 2.5 姊妹減脂飲食攻略與外食指南（展開式速查） -->
+    <section class="bg-gradient-to-br from-amber-50/80 to-orange-50/50 rounded-3xl p-5 shadow-sm border border-amber-200/70">
+      <div class="flex items-center justify-between cursor-pointer" onclick="toggleDietGuide()">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🥗</span>
+          <div>
+            <h2 class="text-sm font-bold text-stone-800 flex items-center gap-1.5">
+              減脂怎麼吃？姐妹實戰飲食攻略
+              <span class="text-[10px] bg-amber-200 text-amber-900 font-semibold px-2 py-0.5 rounded-full">點擊展開</span>
+            </h2>
+            <p class="text-[11px] text-stone-500">不挨餓、掉內臟脂肪的「211餐盤」與超商/外食搭配法</p>
+          </div>
+        </div>
+        <span id="diet-guide-arrow" class="text-xs text-stone-400 transition-transform duration-300">▼</span>
+      </div>
+
+      <!-- 展開內容 -->
+      <div id="diet-guide-content" class="hidden mt-4 pt-4 border-t border-amber-200/60 space-y-4 text-xs text-stone-700">
+        <!-- 核心法則：211 餐盤 -->
+        <div class="bg-white/90 p-3.5 rounded-2xl border border-amber-100 space-y-2">
+          <h3 class="font-bold text-stone-800 text-xs flex items-center gap-1">
+            <span>🍽️</span> 核心吃法：黃金「211 餐盤」原則
+          </h3>
+          <p class="text-stone-600 leading-relaxed text-[11px]">
+            每一餐把盤子或便當分成 4 等份，不用秤重算卡路里，用眼睛看份量：
+          </p>
+          <div class="grid grid-cols-3 gap-2 text-center pt-1">
+            <div class="bg-emerald-50 border border-emerald-200 p-2 rounded-xl">
+              <span class="block font-bold text-emerald-800 text-xs">🥦 蔬菜 2 份</span>
+              <span class="text-[10px] text-emerald-600">佔 50% 盤子，深綠色多吃</span>
+            </div>
+            <div class="bg-sky-50 border border-sky-200 p-2 rounded-xl">
+              <span class="block font-bold text-sky-800 text-xs">🍗 蛋白質 1 份</span>
+              <span class="text-[10px] text-sky-600">佔 25%，雞胸/豆腐/魚/蛋</span>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 p-2 rounded-xl">
+              <span class="block font-bold text-amber-800 text-xs">🍠 澱粉 1 份</span>
+              <span class="text-[10px] text-amber-600">佔 25%，地瓜/糙米/南瓜</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 進食順序 -->
+        <div class="bg-white/90 p-3.5 rounded-2xl border border-amber-100 space-y-1.5">
+          <h3 class="font-bold text-stone-800 text-xs flex items-center gap-1">
+            <span>🥢</span> 改變「進食順序」，血糖不飆升就不容易囤脂肪
+          </h3>
+          <p class="text-[11px] text-stone-600 leading-relaxed">
+            <strong class="text-amber-800">1. 先喝水或清湯</strong> ➔ 
+            <strong class="text-amber-800">2. 先吃肉/蛋/豆（蛋白質）</strong> ➔ 
+            <strong class="text-amber-800">3. 吃滿滿蔬菜（纖維墊胃）</strong> ➔ 
+            <strong class="text-amber-800">4. 最後才吃澱粉（飯/麵少許）</strong><br>
+            這樣吃飽足感可延長 4~5 小時，不會吃完飯立刻昏睡想吃甜點！
+          </p>
+        </div>
+
+        <!-- 台灣外食實戰搭配 -->
+        <div class="bg-white/90 p-3.5 rounded-2xl border border-amber-100 space-y-2.5">
+          <h3 class="font-bold text-stone-800 text-xs flex items-center gap-1">
+            <span>🏪</span> 台灣三大日常外食「不踩雷組合」
+          </h3>
+          <div class="space-y-2 text-[11px]">
+            <div class="p-2 bg-stone-50 rounded-xl">
+              <strong class="text-stone-800 block mb-0.5">🏪 7-11 / 全家超商配法：</strong>
+              <span class="text-stone-600">舒肥雞胸肉 或 兩顆茶葉蛋 + 溫野菜沙拉（和風醬/不沾醬） + 蒸地瓜（小條） 或 無糖高纖豆漿。</span>
+            </div>
+            <div class="p-2 bg-stone-50 rounded-xl">
+              <strong class="text-stone-800 block mb-0.5">🍱 便當店 / 自助餐配法：</strong>
+              <span class="text-stone-600">主菜選滷雞腿/蒸魚/烤里肌（避開炸排骨/炸雞排），夾 2~3 格深色蔬菜，白飯只吃半碗，請老闆「不要淋滷汁」。</span>
+            </div>
+            <div class="p-2 bg-stone-50 rounded-xl">
+              <strong class="text-stone-800 block mb-0.5">🍲 火鍋店 / 湯麵攤配法：</strong>
+              <span class="text-stone-600">火鍋選昆布清湯底，火鍋料全換蔬菜，肉片選板腱牛或雞肉，醬料只用蔥花+蒜泥+生辣椒+蘿蔔泥。小吃攤點燙青菜（不淋肉燥）+ 嘴邊肉/肝連 + 蛋花湯。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 避坑三大殺手 -->
+        <div class="bg-rose-50/80 p-3.5 rounded-2xl border border-rose-200/80 space-y-1">
+          <h3 class="font-bold text-rose-800 text-xs flex items-center gap-1">
+            <span>⚠️</span> 兩週沒降？檢查是否吃了這 3 個「隱形殺手」
+          </h3>
+          <ul class="list-disc list-inside text-[11px] text-rose-700 space-y-0.5 pl-1">
+            <li><strong>手搖飲陷阱</strong>：微糖、鮮奶茶、果汁其實都含有高濃度果糖，是內臟脂肪的主要來源（改喝無糖茶、黑咖啡或檸檬水）。</li>
+            <li><strong>沙拉醬與醬汁</strong>：千島醬、胡麻醬、肉燥、沙茶醬的熱量通常比肉本身還高。</li>
+            <li><strong>水果當正餐</strong>：西瓜、芒果、葡萄糖分極高，水果一天最多「一拳頭大小」即可，不能拿來代餐。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 今日打卡填寫表單（輸入自動即時同步 + 即時健檢） -->
+    <section id="checkin-section" class="bg-white rounded-3xl p-5 shadow-sm border border-stone-200">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-bold text-stone-700 flex items-center gap-1.5">
-          <span>📝</span> 今日打卡填寫 (<span id="form-user-name" class="text-amber-800">👧 莉君</span>)
+          <span>📝</span> 每日紀錄填寫 (<span id="form-user-name" class="text-amber-800">👧 莉君</span>)
         </h2>
-        <span class="text-[11px] text-stone-400">⚡ 填寫時即時自動保存</span>
+        <div class="flex items-center gap-2">
+          <button id="back-today-btn" onclick="resetToToday()" class="hidden text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 px-2.5 py-1 rounded-xl font-medium transition">
+            📅 跳回今天
+          </button>
+          <span class="text-[11px] text-stone-400">⚡ 隨時輸入自動保存</span>
+        </div>
+      </div>
+
+      <!-- 提示正在修改的日期 -->
+      <div id="editing-banner" class="hidden mb-3 bg-amber-50 border border-amber-200 p-2.5 rounded-2xl flex items-center justify-between text-xs text-amber-900">
+        <span>✏️ 正在編輯/查看：<strong id="editing-banner-date"></strong> 的紀錄</span>
+        <button onclick="resetToToday()" class="text-[11px] underline font-semibold text-amber-800">完成並回到今天</button>
       </div>
 
       <form id="checkin-form" onsubmit="event.preventDefault(); triggerSyncNow();" class="space-y-3.5">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-medium text-stone-500 mb-1">📅 打卡日期</label>
-            <input type="date" id="input-date" onchange="loadLogForDate()" required class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs border">
+            <input type="date" id="input-date" onchange="handleDateChange()" required class="w-full rounded-xl border-stone-200 bg-stone-50 px-3 py-2 text-xs border">
           </div>
           <div>
             <label class="block text-xs font-medium text-stone-500 mb-1">⚖️ 今日體重 (kg)</label>
@@ -142,13 +244,25 @@
 
         <!-- 飲食記錄 -->
         <div class="bg-stone-50/70 rounded-2xl p-3.5 border border-stone-200/70 space-y-2.5">
-          <span class="text-xs font-bold text-stone-600 block">🥗 今日飲食內容</span>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-stone-600 block">🥗 今日飲食內容（隨時輸入，自動健檢）</span>
+            <button type="button" onclick="generateDietFeedback(true)" class="text-[11px] bg-amber-100 text-amber-800 hover:bg-amber-200 px-2.5 py-0.5 rounded-lg font-medium transition">
+              ✨ 分析今日飲食
+            </button>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <input type="text" id="input-breakfast" oninput="autoSaveLogDebounced()" placeholder="☀️ 早餐" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
             <input type="text" id="input-lunch" oninput="autoSaveLogDebounced()" placeholder="🍱 午餐" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
             <input type="text" id="input-dinner" oninput="autoSaveLogDebounced()" placeholder="🌙 晚餐" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
           </div>
           <input type="text" id="input-snacks" oninput="autoSaveLogDebounced()" placeholder="🍎 水果 / 點心 / 飲料" class="w-full rounded-xl border-stone-200 bg-white px-3 py-2 text-xs border">
+        </div>
+
+        <!-- 即時飲食改善回饋卡片 -->
+        <div id="diet-feedback-box" class="bg-gradient-to-r from-amber-50/70 to-emerald-50/70 rounded-2xl p-3.5 border border-amber-200/60 text-xs">
+          <div class="text-stone-400 py-1 text-center">
+            🌱 填寫上方飲食內容後，此處將自動產生專屬的「211餐盤分析與改善建議」
+          </div>
         </div>
 
         <!-- 運動 & 想說的話 -->
@@ -189,13 +303,13 @@
       </div>
     </section>
 
-    <!-- 5. 共享歷史打卡日記（可刪除單筆紀錄） -->
+    <!-- 5. 共享歷史打卡日記（可修改與刪除紀錄） -->
     <section class="space-y-3">
       <div class="flex items-center justify-between">
         <h2 class="text-sm font-bold text-stone-700 flex items-center gap-1.5">
           <span>💬</span> 歷史打卡日記
         </h2>
-        <span class="text-[11px] text-stone-400">可刪除舊的錯誤打卡</span>
+        <span class="text-[11px] text-stone-400">點擊 ✏️ 可直接載入修改，🗑️ 可刪除</span>
       </div>
       <div id="feed-container" class="space-y-3">
         <p class="text-xs text-stone-400 text-center py-6">正在連接雲端中...</p>
@@ -204,11 +318,28 @@
 
   </main>
 
+  <!-- 自訂確認刪除彈跳視窗（避免瀏覽器 alert/confirm） -->
+  <div id="confirm-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-5 max-w-xs w-full shadow-xl border border-stone-200 text-center space-y-3">
+      <span class="text-3xl block">🗑️</span>
+      <h3 class="text-sm font-bold text-stone-800">確定要刪除這筆打卡紀錄嗎？</h3>
+      <p class="text-xs text-stone-500">刪除後雲端資料將無法復原唷！</p>
+      <div class="flex items-center justify-center gap-2 pt-2">
+        <button id="modal-cancel-btn" class="px-4 py-2 rounded-xl text-xs font-medium bg-stone-100 text-stone-600 hover:bg-stone-200 transition">
+          取消
+        </button>
+        <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl text-xs font-medium bg-rose-600 text-white hover:bg-rose-700 transition">
+          確定刪除
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase 模組化邏輯 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
     import { 
-      getFirestore, collection, addDoc, onSnapshot, query, orderBy, 
+      getFirestore, collection, onSnapshot, query, orderBy, 
       doc, setDoc, deleteDoc, getDocs, where, writeBatch 
     } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
@@ -309,7 +440,7 @@
       localStorage.setItem('health_members_list_v2', JSON.stringify(members));
     }
 
-    // 1. 修改名稱並批次更新歷史紀錄
+    // 修改名稱並批次更新歷史紀錄
     window.updateMemberName = async function(newName) {
       if (!newName || !newName.trim()) return;
       const cleanName = newName.trim();
@@ -322,7 +453,7 @@
       autoSaveProfile();
     };
 
-    // 3. 修改小圖示並同步歷史紀錄
+    // 修改小圖示並同步歷史紀錄
     window.updateMemberEmoji = async function(newEmoji) {
       const m = members.find(x => x.id === currentUserId);
       if (!m) return;
@@ -333,7 +464,7 @@
       autoSaveProfile();
     };
 
-    // 歷史紀錄同步更新邏輯（Firebase Batch Update）
+    // 歷史紀錄同步更新邏輯
     async function syncMemberHistory(userId, newName, newEmoji) {
       showSaveIndicator('正在同步歷史紀錄...');
       try {
@@ -352,14 +483,13 @@
       }
     }
 
-    // 4. 自訂目標水量
+    // 自訂目標水量與喝水打卡
     window.updateTargetWater = function(val) {
       targetWater = parseInt(val) || 2000;
       updateWaterDisplay();
       autoSaveProfile();
     };
 
-    // 喝水打卡
     window.addWater = function(amt) {
       currentWater += amt;
       updateWaterDisplay();
@@ -386,7 +516,7 @@
       document.getElementById('water-progress-bar').style.width = `${pct}%`;
     }
 
-    // 5. 個人減重檔案自動儲存
+    // 個人減重檔案自動儲存
     window.autoSaveProfile = function() {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(async () => {
@@ -421,60 +551,185 @@
       updateWaterDisplay();
     }
 
-    // 5. 每日打卡自動即時同步（Debounced Auto-save）
+    // 每日打卡自動即時同步
     let logDebounceTimer = null;
     window.autoSaveLogDebounced = function() {
       clearTimeout(logDebounceTimer);
       logDebounceTimer = setTimeout(() => {
         autoSaveLogNow();
+        generateDietFeedback(false);
       }, 600);
     };
 
-    window.triggerSyncNow = function() {
-      autoSaveLogNow();
-    };
-
     async function autoSaveLogNow() {
-      const weightVal = parseFloat(document.getElementById('input-weight').value);
+      const date = document.getElementById('input-date').value;
+      if (!date) return;
+
       const curMember = members.find(m => m.id === currentUserId) || members[0];
-      const selectedDate = document.getElementById('input-date').value;
-      const bodyFatVal = document.getElementById('input-bodyfat').value;
+      const weightVal = parseFloat(document.getElementById('input-weight').value);
+      const fatVal = parseFloat(document.getElementById('input-bodyfat').value);
 
-      // 如果體重跟飲食都沒填，就不自動寫空白
-      const breakfast = document.getElementById('input-breakfast').value.trim();
-      const lunch = document.getElementById('input-lunch').value.trim();
-      const dinner = document.getElementById('input-dinner').value.trim();
-      const snacks = document.getElementById('input-snacks').value.trim();
-      const exercise = document.getElementById('input-exercise').value.trim();
-      const note = document.getElementById('input-note').value.trim();
-
-      if (isNaN(weightVal) && !breakfast && !lunch && !dinner && !snacks && !exercise && !note && currentWater === 0) {
-        return;
-      }
-
-      const docId = `${currentUserId}_${selectedDate}`;
-      const entry = {
+      const logData = {
         userId: currentUserId,
         userName: `${curMember.emoji} ${curMember.name}`,
-        date: selectedDate,
-        weight: isNaN(weightVal) ? null : weightVal,
-        bodyFat: bodyFatVal ? parseFloat(bodyFatVal) : null,
+        date: date,
+        weight: !isNaN(weightVal) ? weightVal : null,
+        bodyFat: !isNaN(fatVal) ? fatVal : null,
+        breakfast: document.getElementById('input-breakfast').value.trim(),
+        lunch: document.getElementById('input-lunch').value.trim(),
+        dinner: document.getElementById('input-dinner').value.trim(),
+        snacks: document.getElementById('input-snacks').value.trim(),
+        exercise: document.getElementById('input-exercise').value.trim(),
+        note: document.getElementById('input-note').value.trim(),
         water: currentWater,
-        breakfast, lunch, dinner, snacks, exercise, note,
         updatedAt: new Date().toISOString()
       };
 
+      const docId = `${currentUserId}_${date}`;
       try {
-        await setDoc(doc(db, "daily_logs", docId), entry, { merge: true });
-        showSaveIndicator('打卡已自動儲存 🌸');
+        await setDoc(doc(db, "daily_logs", docId), logData, { merge: true });
+        showSaveIndicator('紀錄已即時儲存 ☁️');
       } catch (err) {
-        console.error("打卡儲存失敗:", err);
+        console.error("保存失敗:", err);
       }
     }
 
-    // 切換日期時載入當日打卡資料
+    window.triggerSyncNow = function() {
+      autoSaveLogNow();
+      generateDietFeedback(true);
+    };
+
+    // 智能飲食分析與回饋生成函數
+    window.generateDietFeedback = function(showFeedbackNotice = true) {
+      const b = document.getElementById('input-breakfast').value.trim();
+      const l = document.getElementById('input-lunch').value.trim();
+      const d = document.getElementById('input-dinner').value.trim();
+      const s = document.getElementById('input-snacks').value.trim();
+      const ex = document.getElementById('input-exercise').value.trim();
+      const box = document.getElementById('diet-feedback-box');
+
+      const allFoodText = `${b} ${l} ${d} ${s}`.toLowerCase();
+
+      if (!b && !l && !d && !s) {
+        box.innerHTML = `
+          <div class="text-stone-400 py-1 text-center">
+            🌱 尚未填寫今日飲食內容，請在上方輸入早餐、午餐或晚餐後，再進行健檢唷！
+          </div>
+        `;
+        return;
+      }
+
+      // 關鍵字字典
+      const proteinKeywords = ['蛋', '豆漿', '豆腐', '雞', '魚', '肉', '牛肉', '豬肉', '蝦', '海鮮', '毛豆', '里肌', '干貝', '鮪魚', '乳清', '優格', '起司'];
+      const vegKeywords = ['菜', '沙拉', '蔬菜', '青菜', '番茄', '菇', '花椰菜', '小黃瓜', '木耳', '菠菜', '高麗菜', '地瓜葉', '海帶', '筍'];
+      const refinedCarbKeywords = ['麵包', '吐司', '鐵板麵', '炸雞', '甜點', '蛋糕', '奶茶', '手搖', '含糖', '餅乾', '糖果', '冰淇淋', '炸', '洋芋片', '可樂', '珍珠', '飯糰', '烤飯糰'];
+      const goodCarbKeywords = ['地瓜', '南瓜', '糙米', '五穀', '燕麥', '馬鈴薯', '玉米', '藜麥'];
+
+      let hasProtein = proteinKeywords.some(k => allFoodText.includes(k));
+      let hasVeg = vegKeywords.some(k => allFoodText.includes(k));
+      let hasSnacksOrSugar = refinedCarbKeywords.some(k => allFoodText.includes(k));
+      let hasGoodCarb = goodCarbKeywords.some(k => allFoodText.includes(k));
+
+      // 評估水份
+      const waterRatio = currentWater / targetWater;
+
+      const goodPoints = [];
+      const warnings = [];
+      const actionTips = [];
+
+      // 1. 優點判斷
+      if (hasVeg) goodPoints.push('✅ 有攝取蔬菜纖維，能穩定血糖、增加飽足感！');
+      if (hasProtein) goodPoints.push('✅ 有注意到蛋白質補充，減脂期保住肌肉代謝才是關鍵！');
+      if (hasGoodCarb) goodPoints.push('✅ 澱粉選擇了優質原型碳水（地瓜/糙米/燕麥），非常標準！');
+      if (waterRatio >= 0.8) goodPoints.push('✅ 喝水量達標良好，脂肪燃燒代謝速度會大幅提升！');
+      if (ex) goodPoints.push(`✅ 有進行運動（${ex}），增強代謝循環與心肺！`);
+      if (goodPoints.length === 0) goodPoints.push('🌱 踏出記錄的第一步就是成功的一半，持續觀察飲食內容！');
+
+      // 2. 盲點與警訊
+      if (!hasProtein) {
+        warnings.push('⚠️ 蛋白質看起來稍微偏少！若每一餐缺少蛋白質，飽足感容易撐不久，下午容易餓而想吃零食。');
+      }
+      if (!hasVeg) {
+        warnings.push('⚠️ 蔬菜比例嚴重不足！減脂最核心的「211 餐盤」要求蔬菜佔比 50%，深綠色蔬菜可多夾一些。');
+      }
+      if (hasSnacksOrSugar) {
+        warnings.push('⚠️ 發現有精緻澱粉或甜點/醬汁（如飯糰、吐司或手搖）！在缺少蔬菜時容易使胰島素上升，阻礙脂肪分解。');
+      }
+      if (waterRatio < 0.5) {
+        warnings.push(`⚠️ 水分僅喝了 ${currentWater}ml，未達目標的一半，身體缺水會讓代謝停滯、並引發「假性飢餓」。`);
+      }
+
+      // 3. 明天超好落地的 1 個小改善建議
+      if (!hasVeg) {
+        actionTips.push('👉 **明日微調挑戰**：每一餐請確保「盤子的一半是蔬菜」！外食去超商加一盒和風生菜沙拉或微波青花菜墊底。');
+      } else if (hasSnacksOrSugar) {
+        actionTips.push('👉 **明日微調挑戰**：若吃了飯糰或麵包，水果（如香蕉）請移到白天或運動前吃，避免晚餐碳水疊加超標。');
+      } else if (!hasProtein) {
+        actionTips.push('👉 **明日微調挑戰**：明天每一餐都確保有一份蛋白質，例如早餐多加一顆茶葉蛋、午餐多點一份無糖高纖豆漿。');
+      } else if (waterRatio < 0.8) {
+        actionTips.push('👉 **明日微調挑戰**：設定小鬧鐘，每小時喝 200ml 溫水，明天把喝水進度條推滿 100%！');
+      } else {
+        actionTips.push('👉 **維持目前節奏**：今天的飲食搭配非常優質！照這個「高纖維 + 高蛋白 + 充足水份」的節奏堅持一週，體重一定會往下走！');
+      }
+
+      // 渲染回饋面板
+      box.innerHTML = `
+        <div class="space-y-2">
+          <div>
+            <span class="font-bold text-emerald-800 flex items-center gap-1 mb-1">
+              <span>🌟</span> 今日亮點：
+            </span>
+            <ul class="space-y-0.5 text-stone-600 pl-4 list-disc text-[11px]">
+              ${goodPoints.map(p => `<li>${p}</li>`).join('')}
+            </ul>
+          </div>
+
+          ${warnings.length > 0 ? `
+            <div class="pt-1.5 border-t border-amber-200/50">
+              <span class="font-bold text-rose-800 flex items-center gap-1 mb-1">
+                <span>⚠️</span> 檢視盲點：
+              </span>
+              <ul class="space-y-0.5 text-rose-700 pl-4 list-disc text-[11px]">
+                ${warnings.map(w => `<li>${w}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          <div class="pt-1.5 border-t border-amber-200/50">
+            <span class="font-bold text-amber-900 flex items-center gap-1 mb-1">
+              <span>🎯</span> 給妳的明日行動建議：
+            </span>
+            <p class="text-stone-700 text-[11px] leading-relaxed bg-white/80 p-2 rounded-xl border border-amber-200/50">
+              ${actionTips.join('<br>')}
+            </p>
+          </div>
+        </div>
+      `;
+
+      if (showFeedbackNotice) {
+        showSaveIndicator('飲食健檢完成！請見下方回饋 💡');
+      }
+    };
+
+    // 切換日期與載入當日打卡資料
     window.loadLogForDate = function() {
       const date = document.getElementById('input-date').value;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const isPastOrFuture = date !== todayStr;
+      
+      const banner = document.getElementById('editing-banner');
+      const bannerDate = document.getElementById('editing-banner-date');
+      const backTodayBtn = document.getElementById('back-today-btn');
+
+      if (isPastOrFuture) {
+        banner.classList.remove('hidden');
+        bannerDate.textContent = date;
+        backTodayBtn.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+        backTodayBtn.classList.add('hidden');
+      }
+
       const found = allLogs.find(l => l.userId === currentUserId && l.date === date);
       if (found) {
         document.getElementById('input-weight').value = found.weight || '';
@@ -498,17 +753,55 @@
         currentWater = 0;
       }
       updateWaterDisplay();
+      generateDietFeedback(false);
     };
 
-    // 2. 刪除單筆紀錄功能
-    window.deleteLog = async function(docId) {
-      if (confirm("確定要刪除這筆紀錄嗎？（刪除後無法復原）")) {
-        try {
-          await deleteDoc(doc(db, "daily_logs", docId));
-          showSaveIndicator('已刪除紀錄 🗑️');
-        } catch (err) {
-          alert("刪除失敗：" + err.message);
-        }
+    window.handleDateChange = function() {
+      loadLogForDate();
+      showSaveIndicator('已切換至該日，隨時可修改 📅');
+    };
+
+    window.resetToToday = function() {
+      document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+      loadLogForDate();
+      showSaveIndicator('已回到今日打卡 🌸');
+      document.getElementById('checkin-section').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // 歷史紀錄編輯
+    window.editLog = function(userId, date) {
+      if (userId !== currentUserId) {
+        switchUser(userId);
+      }
+      document.getElementById('input-date').value = date;
+      loadLogForDate();
+      document.getElementById('checkin-section').scrollIntoView({ behavior: 'smooth' });
+      showSaveIndicator(`已載入 ${date} 紀錄，修改會自動更新 ✍️`);
+    };
+
+    // 刪除紀錄邏輯
+    let pendingDeleteDocId = null;
+    window.deleteLog = function(docId) {
+      pendingDeleteDocId = docId;
+      document.getElementById('confirm-modal').classList.remove('hidden');
+    };
+
+    document.getElementById('modal-cancel-btn').onclick = function() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+      pendingDeleteDocId = null;
+    };
+
+    document.getElementById('modal-confirm-btn').onclick = async function() {
+      if (!pendingDeleteDocId) return;
+      try {
+        await deleteDoc(doc(db, "daily_logs", pendingDeleteDocId));
+        showSaveIndicator('已成功刪除該筆紀錄 🗑️');
+      } catch (err) {
+        showSaveIndicator('刪除失敗：' + err.message);
+      } finally {
+        document.getElementById('confirm-modal').classList.add('hidden');
+        pendingDeleteDocId = null;
+        loadLogForDate();
       }
     };
 
@@ -605,7 +898,9 @@
               ${diffBadge}
               ${fatBadge}
               ${weightText}
-              <!-- 刪除按鈕 -->
+              <button onclick="editLog('${item.userId}', '${item.date}')" title="編輯此紀錄" class="text-stone-400 hover:text-amber-700 p-1 text-xs transition">
+                ✏️
+              </button>
               <button onclick="deleteLog('${item.id}')" title="刪除此紀錄" class="text-stone-300 hover:text-rose-500 p-1 text-xs transition">
                 🗑️
               </button>
@@ -620,7 +915,7 @@
       });
     }
 
-    // 繪製圖表
+    // 繪製與切換趨勢圖表
     const colors = ['#d97706', '#e11d48', '#0284c7', '#16a34a', '#9333ea'];
     window.switchChartMode = function(mode) {
       chartMode = mode;
@@ -708,6 +1003,19 @@
         }
       });
     }
+
+    // 展開/收合減脂飲食指南
+    window.toggleDietGuide = function() {
+      const content = document.getElementById('diet-guide-content');
+      const arrow = document.getElementById('diet-guide-arrow');
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        arrow.textContent = '▲';
+      } else {
+        content.classList.add('hidden');
+        arrow.textContent = '▼';
+      }
+    };
 
     renderMembersBar();
   </script>
